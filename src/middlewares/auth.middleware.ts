@@ -17,7 +17,7 @@ export const authMiddleware = (roles: string[]) => async ( req: Request | any, r
   const user = await User.findOne({ _id: data?.userId })
   if(!user) throw new UnAuthorizedError("Unauthorized: Unknown user")
   if(!user?.isActive) throw new UnAuthorizedError("Unauthorized: User is not active")
-  if(roles.includes(data.role ))
+  if(!roles.includes(data.role)) throw new UnAuthorizedError("Unauthorized: You do not have permission to access this route")
 
   // Add user to request object
   req.user = user

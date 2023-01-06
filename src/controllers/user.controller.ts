@@ -4,7 +4,8 @@ import userModel from '../models/user.model';
 import { BadRequestError } from '../utils/customError';
 
 export const handleGetAllUsers = async (req: Request, res: Response) => {
-  const users = await userModel.find({}, {__v: 0})
+  let users = await userModel.find({}, {__v: 0})
+  users = users.filter(user => user.role !== "admin")
   res.status(200).send(response("All users", users))
 }
 
