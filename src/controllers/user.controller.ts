@@ -15,3 +15,11 @@ export const handleGetOneUsers = async (req: Request, res: Response) => {
   const user = await userModel.findOne({ _id:id}, {__v: 0})
   res.status(200).send(response("User", user))
 }
+
+export const handleDeletetOneUsers = async (req: Request, res: Response) => {
+  const { id } = req.params
+  if(!id) throw new BadRequestError("id required")
+
+  const user = await userModel.findOneAndDelete({ _id:id}, {__v: 0})
+  res.status(200).send(response("User", user))
+}
