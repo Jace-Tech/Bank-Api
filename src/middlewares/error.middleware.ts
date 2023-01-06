@@ -20,7 +20,7 @@ export default (app: Application) => {
 
   // Error Routes
   app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    
+    console.log(error)
     if (errorTypes.includes(error.name)) {
       res.status(error.statusCode).send(response(error.message, null, false));
     } else if (error.name == "MongoError" && error.code == 11000) {

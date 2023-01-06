@@ -4,7 +4,7 @@ import morgan from "morgan";
 
 export default (app: Application) => {
   app.use(cors({ origin: "*" }));
-  app.use(morgan("dev"));
+  app.use(morgan("short"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 

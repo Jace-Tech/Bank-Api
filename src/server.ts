@@ -22,7 +22,6 @@ const ORIGIN = process.env.ORIGIN || `http://localhost:${PORT}`
 preMiddleware(app);
 
 // Routes
-
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello from Bank API" })
 })
@@ -31,6 +30,7 @@ app.get("/ping", (req: Request, res: Response) => {
   res.json({ message: "Hello from Bank API" })
 })
 
+// Main Routes
 app.use("/api", allRoutes)
 
 // Swagger UI

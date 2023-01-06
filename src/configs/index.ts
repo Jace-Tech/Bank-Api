@@ -1,6 +1,6 @@
 export default {
   roles: {
     ADMIN: ['admin'],
-    USERS: ['admin', 'users']
+    USERS: ['admin', 'user']
   }
 }
