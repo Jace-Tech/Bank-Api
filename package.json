@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/server.ts",
-    "build": "tsc && rimraf ./build",
-    "start": "yarn build && tsc && node ./build/server.js"
+    "build": "tsc && rimraf ./build && tsc",
+    "start": "yarn build && node ./build/server.js"
   },
   "keywords": [],
   "author": "",
