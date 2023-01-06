@@ -182,6 +182,7 @@
 - authorization: string. eg `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2I3ZjMzOTlkNjVmNzMyNmY4MzQyNjYiLCJyb2xlIjoidXNlciIsImlhdCI6MTY3MzAwMjQ2OSwiZXhwIjoxNjczNjA3MjY5fQ.0DKyqiCkKrcs6Rix5WT66bz-zdws8HJhz006aETYisE`
 
 ### Required Params
+
 - id: string - `Users id`
 
 ### Response
