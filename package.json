@@ -1,11 +1,12 @@
 {
-  "name": "James",
+  "name": "back-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/server.ts",
-    "start": "tsc && rimraf ./build && tsc && node ./build/server.js"
+    "build": "tsc && rimraf ./build",
+    "start": "yarn build && tsc && node ./build/server.js"
   },
   "keywords": [],
   "author": "",

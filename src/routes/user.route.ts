@@ -8,7 +8,7 @@ const { roles } = config
 
 // Register Route
 router.get("/", authMiddleware(roles.ADMIN), handleGetAllUsers)
-router.post("/:id", handleGetOneUsers)
+router.get("/:id", handleGetOneUsers)
 
 
 
