@@ -43,7 +43,10 @@
       "role": "user",
       "accountNumber": "164996154",
       "accountType": "savings",
-      "balance": 0
+      "balance": 0,
+      "accountId": "63b807d12dfdd60c99541a07",
+      "accountName": "Jace Alexander",
+      "routingNumber": 678324987,
   },
   "success": true
 }
@@ -269,3 +272,30 @@
   "success": true
 }
 ```
+
+> POST: /account/:accountID/card
+
+### Required Headers
+- Authorization
+
+### Optional Body
+
+- cardType: string
+
+### Response
+
+```json
+{
+  "message": "Card created!",
+  "data": {
+    "account": "63b8367163e64995fa0c4bc6",
+    "user": "63b8367163e64995fa0c44543",
+    "cardType": "debit",
+    "cvv": 234,
+    "routingNumber": 431234567,
+    "expiryDate": 1767394800000
+  },
+  "success": true
+}
+```
+> PS: `expiryDate` is a timestamp

@@ -1,8 +1,9 @@
+import { generateRandNumber, generateAccountNumber } from './../utils/functions';
 import { generateToken } from './../utils/token';
 import { Response, Request } from 'express';
 import User from "./../models/user.model"
 import Account from "./../models/account.model"
-import { generateAccountNumber } from '../utils/functions';
+
 import { BadRequestError, NotFoundError } from '../utils/customError';
 import { response } from '../utils/response';
 
@@ -22,6 +23,8 @@ export const handleSignUp = async (req: Request, res: Response) => {
   const account = await Account.create({
     user: user._id,
     accountNumber:  generateAccountNumber(),
+    accountName: user.name,
+    routingNumber: generateRandNumber(9)
   })
 
   // Send response
@@ -33,7 +36,10 @@ export const handleSignUp = async (req: Request, res: Response) => {
     role: user.role,
     accountNumber: account.accountNumber,
     accountType: account.accountType,
-    balance: account.balance
+    balance: account.balance,
+    accountId: account._id,
+    accountName: account.accountName,
+    routingNumber: account.routingNumber,
   }
 
   res.status(201).send(response("User created", data, true))

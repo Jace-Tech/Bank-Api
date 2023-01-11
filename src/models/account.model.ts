@@ -15,6 +15,12 @@ const AccountSchema = new mongoose.Schema({
     type: Number,
     default: 0.00
   },
+  routingNumber: {
+    type: Number,
+  },
+  accountName: {
+    type: String,
+  },
   accountType: {
     type: String,
     default: "savings",
