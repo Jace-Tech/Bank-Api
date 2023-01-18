@@ -17,5 +17,5 @@ export const handleCreateCard = async (req: Request | any, res: Response) => {
     ...req.body
   })
 
-  res.status(200).send(response("Card created", card, true))
+  res.status(200).send(response("Card created!", card, true))
 }
