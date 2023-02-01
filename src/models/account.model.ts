@@ -1,35 +1,41 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const AccountSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true,
-    ref: "user"
+const AccountSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.SchemaTypes.ObjectId,
+      required: true,
+      ref: "user",
+    },
+    IBAN: {
+      type: String,
+      required: true,
+    },
+    accountNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    balance: {
+      type: Number,
+      default: 0.0,
+    },
+    routingNumber: {
+      type: Number,
+    },
+    accountName: {
+      type: String,
+    },
+    accountType: {
+      type: String,
+      required: true,
+    },
+    pin: {
+      type: String,
+      default: null,
+    },
   },
-  accountNumber: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  balance: {
-    type: Number,
-    default: 0.00
-  },
-  routingNumber: {
-    type: Number,
-  },
-  accountName: {
-    type: String,
-  },
-  accountType: {
-    type: String,
-    default: "savings",
-    enum: ['savings', 'current']
-  },
-  pin: {
-    type: String,
-    default: null
-  },
-}, { timestamps: true })
+  { timestamps: true }
+);
 
-export default mongoose.model("account", AccountSchema)
+export default mongoose.model("account", AccountSchema);

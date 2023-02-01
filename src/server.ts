@@ -1,8 +1,10 @@
 import { Response } from 'express';
 import { Request } from 'express';
 import express from 'express';
-import "express-async-errors"
 import dotenv from "dotenv"
+import "express-async-errors"
+
+
 dotenv.config()
 
 import preMiddleware from './middlewares/pre.middleware';

@@ -1,16 +1,24 @@
+import fs from 'fs/promises'
+import { sendMail } from '../utils/mailer';
 import { generateRandNumber, generateAccountNumber } from './../utils/functions';
 import { generateToken } from './../utils/token';
 import { Response, Request } from 'express';
 import User from "./../models/user.model"
 import Account from "./../models/account.model"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 import { BadRequestError, NotFoundError } from '../utils/customError';
 import { response } from '../utils/response';
+import path from 'path';
+import userModel from './../models/user.model';
 
 export const handleSignUp = async (req: Request, res: Response) => {
   if(!req.body.name) throw new BadRequestError("Name is required")
   if(!req.body.email) throw new BadRequestError("Email is required")
   if(!req.body.password) throw new BadRequestError("Password is required")
+  if(!req.body.accountType) throw new BadRequestError("Account type is required")
 
   // Check if user already exists
   let user = await User.findOne({ email: req.body.email })
@@ -22,10 +30,25 @@ export const handleSignUp = async (req: Request, res: Response) => {
   // Create an account
   const account = await Account.create({
     user: user._id,
+    IBAN: generateRandNumber(12),
+    accountType: req.body.accountType,
+    pin: generateRandNumber(4),
     accountNumber:  generateAccountNumber(),
     accountName: user.name,
     routingNumber: generateRandNumber(9)
   })
+
+  // Send Email
+  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/new_account.html"), "utf-8") 
+  message = message.replace("{{ firstname }}", user.name)
+  message = message.replace("{{ bankName }}", process.env.APP_NAME!)
+  message = message.replace("{{ accountNumber }}", account.accountNumber)
+  message = message.replace("{{ accountPin }}", account.pin)
+  message = message.replace("{{ accountType }}", account.accountType)
+  message = message.replace("{{ iban }}", account.IBAN)
+
+
+  await sendMail(user.email, `Welcome to ${process.env.APP_NAME}`, message)
 
   // Send response
   const data = { 
@@ -39,7 +62,6 @@ export const handleSignUp = async (req: Request, res: Response) => {
     balance: account.balance,
     accountId: account._id,
     accountName: account.accountName,
-    routingNumber: account.routingNumber,
   }
 
   res.status(201).send(response("User created", data, true))

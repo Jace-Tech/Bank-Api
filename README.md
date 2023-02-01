@@ -299,3 +299,28 @@
 }
 ```
 > PS: `expiryDate` is a timestamp
+
+
+> GET: /transaction/
+
+### Required Headers
+- Authorization `ONLY ADMIN CAN ACCESS`
+
+### Response
+
+```json
+{
+  "message": "Card created!",
+  "data": {
+    "account": "63b8367163e64995fa0c4bc6",
+    "user": "63b8367163e64995fa0c44543",
+    "cardType": "debit",
+    "cvv": 234,
+    "routingNumber": 431234567,
+    "expiryDate": 1767394800000
+  },
+  "success": true
+}
+```
+> PS: `expiryDate` is a timestamp
+

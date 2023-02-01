@@ -4,7 +4,7 @@ const TransactionSchema = new mongoose.Schema({
   sender: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "user"
+    ref: "account"
   },
   type: {
     type: String,
@@ -22,9 +22,8 @@ const TransactionSchema = new mongoose.Schema({
   },
   description: String,
   receiver: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type: String,
     required: true,
-    ref: "user"
   },
   token: {
     type: String,
@@ -32,4 +31,4 @@ const TransactionSchema = new mongoose.Schema({
   },
 }, { timestamps: true })
 
-export default mongoose.model("account", TransactionSchema)
+export default mongoose.model("transaction", TransactionSchema)
