@@ -324,3 +324,29 @@
 ```
 > PS: `expiryDate` is a timestamp
 
+
+> POST: /upload-image/
+
+### Required Headers
+- Content-Type: application/json
+
+### Required Body
+- image - Base64
+
+
+### Response
+
+```json
+{
+  "message": "Image url generated",
+  "data": {
+      "url": "https://res.cloudinary.com/jace-dev/image/upload/v1675296285/wqismsll1fwnrvs4cjxx.png",
+      "type": "upload",
+      "width": 654,
+      "height": 456,
+      "size": 26218
+  },
+  "success": true
+}
+```
+
