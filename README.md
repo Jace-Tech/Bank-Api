@@ -331,7 +331,7 @@
 - Content-Type: application/json
 
 ### Required Body
-- image - Base64
+- image - `Base64`
 
 
 ### Response
