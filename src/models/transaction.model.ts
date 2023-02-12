@@ -9,7 +9,7 @@ const TransactionSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['deposit', 'withdraw', 'transfer']
+    enum: ['deposit', 'withdraw', 'transfer', 'wire']
   },
   amount: {
     type: Number,
@@ -20,14 +20,21 @@ const TransactionSchema = new mongoose.Schema({
     enum: ["pending", "approved", "declined"],
     default: "pending"
   },
-  description: String,
+  bank: {
+    type: String,
+    default: null
+  },
+  description: {
+    type: String,
+    default: null
+  },
   receiver: {
     type: String,
     required: true,
   },
-  token: {
+  beneficiaryName: {
     type: String,
-    required: true,
+    default: null
   },
 }, { timestamps: true })
 

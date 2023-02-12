@@ -1,7 +1,7 @@
 import { response } from "./../utils/response";
 import { Request, Response } from "express";
 import userModel from "../models/user.model";
-import { BadRequestError } from "../utils/customError";
+import { BadRequestError, NotFoundError } from "../utils/customError";
 import accountModel from "../models/account.model";
 
 export const handleGetAllUsers = async (req: Request, res: Response) => {
@@ -48,3 +48,33 @@ export const handleGetUsersAccounts = async (req: Request | any, res: Response) 
   const accounts = await accountModel.find({}, { __v: 0 });
   res.status(200).send(response("User accounts", accounts));
 };
+
+export const handleBlockUser = async (req: Request, res: Response) => {	 
+  if(!req.params.userId) throw new BadRequestError("User ID is required")
+
+  // Check if there's a user
+  const user = await userModel.findOne({ _id: req.params.userId })
+  if(!user) throw new NotFoundError("No user found with that ID")
+
+  // Update the record
+  user.isActive = false
+  await user.save()
+
+  res.status(200).send(response("User account blocked", user))
+}
+
+export const handleUnblockUser = async (req: Request, res: Response) => {	 
+  if(!req.params.userId) throw new BadRequestError("User ID is required")
+
+  // Check if there's a user
+  const user = await userModel.findOne({ _id: req.params.userId })
+  if(!user) throw new NotFoundError("No user found with that ID")
+
+  if(user.isActive) return res.status(304).send(response("User is already active", user))
+
+  // Update the record
+  user.isActive = true
+  await user.save()
+
+  res.status(200).send(response("User account activated", user))
+}

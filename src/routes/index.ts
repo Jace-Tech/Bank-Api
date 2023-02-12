@@ -2,10 +2,14 @@ import { response } from './../utils/response';
 import { CustomError } from './../utils/customError';
 import dotenv from 'dotenv';
 import { Router, Request, Response } from "express"
+
 import authRoute from "./auth.route"
 import userRoute from "./user.route"
+import allowedRoute from "./allowed.route"
 import accountRoute from "./account.route"
 import transactionRoute from "./transaction.route"
+
+
 import { v2 as cloudinary } from "cloudinary"
 dotenv.config()
 
@@ -35,6 +39,7 @@ router.use("/auth", authRoute)
 router.use("/user", userRoute)
 router.use("/transaction", transactionRoute)
 router.use("/account", accountRoute)
+router.use("/allowed", allowedRoute)
 
 
 export default router

@@ -350,3 +350,58 @@
 }
 ```
 
+> POST: /account/:accountId/transfer
+  
+### Required Headers
+- Content-Type: application/json
+
+
+### Required Body
+- sender: user's accountId
+- type: ['deposit', 'withdraw', 'transfer', 'wire']
+- amount: number
+- receiver: string
+- bank: string
+
+### Optional Body
+- description?: string
+- beneficiaryName?: string
+
+
+### Response
+- Example 1 `When reciever is not allowed in the user's allowed list`
+  ```json
+  {
+    "message": "Error Transaction could not be completed \n Transaction id: trx_136277385427",
+    "data": null,
+    "success": false
+  }
+  ```
+
+- Example 2 `When reciever is not allowed in the user's allowed list`
+  ```json
+  {
+    "message": "Error Transaction could not be completed \n Transaction id: trx_136277385427",
+    "data": null,
+    "success": false
+  }
+  ```
+
+  
+> GET: /transaction/:transactId/approve
+  
+### Required Params
+- transactId: transaction ID
+
+### Response
+
+```json
+{
+  "message": "Transaction Approved",
+  "data": {
+      
+  },
+  "success": true
+}
+```
+

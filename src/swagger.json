@@ -1,0 +1,94 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Bank API",
+    "description": "Bank Project Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": ["https://bank-api-xwbj.onrender.com"],
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Transactions",
+      "description": "API for transactions in the system"
+    },
+    {
+      "name": "Accounts",
+      "description": "API for accounts in the system"
+    },
+    {
+      "name": "Auth",
+      "description": "API for authentication in the system"
+    }
+  ],
+  "paths": {
+    "/sign-up": {
+      "post": {
+        "tags": ["Auth"],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "description": "The users email address"
+          },
+          {
+            "name": "name",
+            "in": "body",
+            "description": "The users name"
+          },
+          {
+            "name": "accountType",
+            "in": "body",
+            "description": "The type of account the user wants to create"
+          }
+        ],
+        "summary": "Adds a new user and creates an account for the user",
+        "responses": {
+          "200": {
+            "message": "User created",
+            "data": {
+              "user": {
+                "id": "63b807d12dfdd60c99611a07",
+                "name": "Jace Alexander",
+                "email": "alexjace151@gmail.com",
+                "isActive": true,
+                "role": "user"
+              },
+              "account": {
+                "accountNumber": "164996154",
+                "IBAN": "164996154",
+                "pin": "2354",
+                "accountType": "savings",
+                "balance": 0,
+                "accountId": "63b807d12dfdd60c99541a07",
+                "accountName": "Jace Alexander",
+                "routingNumber": 678324987
+              }
+            },
+            "success": true
+          }
+        }
+      }
+    }
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "x-www-form-urlencoded",
+    "form-data"
+  ],
+  "produces": [
+    "application/json"
+  ]
+}

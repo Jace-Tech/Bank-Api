@@ -13,6 +13,7 @@ import { BadRequestError, NotFoundError } from '../utils/customError';
 import { response } from '../utils/response';
 import path from 'path';
 import userModel from './../models/user.model';
+import notificationModel from '../models/notification.model';
 
 export const handleSignUp = async (req: Request, res: Response) => {
   if(!req.body.name) throw new BadRequestError("Name is required")
@@ -46,9 +47,22 @@ export const handleSignUp = async (req: Request, res: Response) => {
   message = message.replace("{{ accountPin }}", account.pin)
   message = message.replace("{{ accountType }}", account.accountType)
   message = message.replace("{{ iban }}", account.IBAN)
+  message = message.replace("{{ year }}", new Date().getFullYear().toString())
+
 
 
   await sendMail(user.email, `Welcome to ${process.env.APP_NAME}`, message)
+
+  // Notify Admin
+  // Check if there's admin
+  const admin = await userModel.findOne({ role: "admin" })
+  // Create Notification
+  if(admin) 
+    await notificationModel.create({
+      user: admin._id,
+      message: `${user?.name} Created an account now`,
+      type: "registration"
+    })
 
   // Send response
   const data = { 
@@ -82,3 +96,15 @@ export const handleSignIn = async (req: Request, res: Response) => {
   res.status(200).send(response("Logged in successfully", {user, token}))
 }
 
+export const handleAdminSignUp = async (req: Request, res: Response) => {
+  if(!req.body.name) throw new BadRequestError("Name is required")
+  if(!req.body.email) throw new BadRequestError("Email is required")
+  if(!req.body.password) throw new BadRequestError("Password is required")
+
+  // Check if user already exists
+  let user = await User.findOne({ email: req.body.email })
+  if(user) throw new BadRequestError("User already exists")
+
+  user = await User.create({ ...req.body, role: "admin" })
+  res.status(201).send(response("Account created!", user))
+}
