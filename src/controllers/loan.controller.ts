@@ -34,7 +34,7 @@ export const handleCreateLoan = async (req: Request, res: Response) => {
     <p class="message">Your request to loan $${Number(req.body.amount).toLocaleString()} has been sent, We'll notify you on any further development.</p>
   `
 
-  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/loan_request.html"), "utf-8")
+  let message = await fs.readFile(path.resolve("./src/templates/loan_request.html"), "utf-8")
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 

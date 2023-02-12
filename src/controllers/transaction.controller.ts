@@ -42,7 +42,7 @@ export const handleApproveTransaction = async (req: Request, res: Response) => {
     <p class="message">Your request to ${transaction.type} $${transaction.amount.toLocaleString()} has been approved and completed</p>
   `
 
-  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/transaction.html"), "utf-8")
+  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 

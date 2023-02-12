@@ -64,7 +64,7 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
     <p class="message">Request to ${transaction.type} $${transaction.amount.toLocaleString()} has been sent, It'll be processed as soon as possible. You be updated on any development.</p>
   `
 
-  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/transaction.html"), "utf-8")
+  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 
@@ -121,7 +121,7 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
     <p class="message">Your account was credited with $${Number(req.body?.amount).toLocaleString()}.</p>
   `
 
-  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/transaction.html"), "utf-8")
+  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 

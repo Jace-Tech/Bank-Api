@@ -40,7 +40,7 @@ export const handleSignUp = async (req: Request, res: Response) => {
   })
 
   // Send Email
-  let message = await fs.readFile(path.join(path.dirname(__filename), "../templates/new_account.html"), "utf-8") 
+  let message = await fs.readFile(path.resolve("./src/templates/new_account.html"), "utf-8") 
   message = message.replace("{{ firstname }}", user.name)
   message = message.replace("{{ bankName }}", process.env.APP_NAME!)
   message = message.replace("{{ accountNumber }}", account.accountNumber)
