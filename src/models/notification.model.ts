@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const NotificationSchema = new mongoose.Schema({
   user: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: "users",
+    ref: "user",
     required: true
   },
   message: {
@@ -17,7 +17,7 @@ const NotificationSchema = new mongoose.Schema({
   },
   from: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: "users",
+    ref: "user",
   }
 }, { timestamps: true })
 

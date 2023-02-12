@@ -7,7 +7,9 @@ import authRoute from "./auth.route"
 import userRoute from "./user.route"
 import allowedRoute from "./allowed.route"
 import accountRoute from "./account.route"
+import loanRoute from "./loan.route"
 import transactionRoute from "./transaction.route"
+import notificationRoute from "./notification.route"
 
 
 import { v2 as cloudinary } from "cloudinary"
@@ -40,6 +42,8 @@ router.use("/user", userRoute)
 router.use("/transaction", transactionRoute)
 router.use("/account", accountRoute)
 router.use("/allowed", allowedRoute)
+router.use("/loan", loanRoute)
+router.use("/notification", notificationRoute)
 
 
 export default router

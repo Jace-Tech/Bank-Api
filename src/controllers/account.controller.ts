@@ -78,7 +78,8 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
     await notificationModel.create({
       user: admin._id,
       message: `I wish to ${req.body.type} ${req.body.amount} to this account ${req.body.receiver}`,
-      type: "transaction" 
+      type: "transaction",
+      from: req.user._id
     })
 
   res.status(200).send(response("Transaction Created", { transaction, account }, true))

@@ -61,7 +61,8 @@ export const handleSignUp = async (req: Request, res: Response) => {
     await notificationModel.create({
       user: admin._id,
       message: `${user?.name} Created an account now`,
-      type: "registration"
+      type: "registration",
+      from: user._id
     })
 
   // Send response

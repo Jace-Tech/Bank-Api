@@ -1,16 +1,28 @@
 import { sendMail } from './../utils/mailer';
 import fs from 'fs/promises';
-import { BadRequestError, NotFoundError } from './../utils/customError';
+import { BadRequestError, NotFoundError, UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
 import { Response } from 'express';
 import { Request } from 'express';
 import transactionModel from '../models/transaction.model';
 import path from 'path';
+import userModel from '../models/user.model';
 
 
 export const handleGetAllTransactions = async (req: Request, res: Response) => {
-  const transactions = await transactionModel.find({}, { __v: 0 }).populate(["sender", "receiver"]).sort({ createdAt: 'desc' }).exec()
+  const transactions = await transactionModel.find({}, { __v: 0 }).populate(["sender"]).sort({ createdAt: 'desc' }).exec()
   res.status(200).send(response("All transactions", transactions, true))
+}
+
+export const handleGetUsersTransaction = async (req: Request, res: Response) => {
+  if(!req.params.userId) throw new BadRequestError("User ID is required")
+
+  const user = await userModel.findOne({ _id: req.params.userId })
+  if(!user) throw new NotFoundError("User not found")
+  if(!user?.isActive) throw new UnAuthorizedError("User account is disabled")
+
+  const transactions = await transactionModel.find({ sender: req.params.userId }, { __v: 0 }).populate(["sender"]).sort({ createdAt: 'desc' }).exec()
+  res.status(200).send(response("All user transactions", transactions, true))
 }
 
 
