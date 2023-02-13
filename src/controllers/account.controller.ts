@@ -9,8 +9,7 @@ import accountModel from '../models/account.model';
 import transactionModel from '../models/transaction.model';
 import notificationModel from '../models/notification.model';
 import userModel from '../models/user.model';
-import fs from "fs/promises"
-import path from "path"
+import { TRANSACTION_TEMPLATE } from '../templates';
 
 
 export const handleCreateCard = async (req: Request | any, res: Response) => {
@@ -64,7 +63,7 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
     <p class="message">Request to ${transaction.type} $${transaction.amount.toLocaleString()} has been sent, It'll be processed as soon as possible. You be updated on any development.</p>
   `
 
-  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
+  let message = TRANSACTION_TEMPLATE
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 
@@ -121,7 +120,7 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
     <p class="message">Your account was credited with $${Number(req.body?.amount).toLocaleString()}.</p>
   `
 
-  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
+  let message = TRANSACTION_TEMPLATE
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 

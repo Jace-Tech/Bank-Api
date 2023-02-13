@@ -35,8 +35,9 @@ export const sendMail = async (to: string[] | string, subject: string, message: 
     to: Array.isArray(to) ? to.join(', ') : to,
     subject,
     // text: "Hello world?", // plain text body
-    html: message, // html body
-  });
+    html: message, // html body,
+    contentType: "text/html"
+  } as any);
 
   if(!result) throw new CustomError("Unable to send email")
 

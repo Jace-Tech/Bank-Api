@@ -1,3 +1,4 @@
+import { LOAN_TEMPLATE } from './../templates/index';
 import { UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
 import { sendMail } from './../utils/mailer';
@@ -34,7 +35,7 @@ export const handleCreateLoan = async (req: Request, res: Response) => {
     <p class="message">Your request to loan $${Number(req.body.amount).toLocaleString()} has been sent, We'll notify you on any further development.</p>
   `
 
-  let message = await fs.readFile(path.resolve("./src/templates/loan_request.html"), "utf-8")
+  let message = LOAN_TEMPLATE
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 

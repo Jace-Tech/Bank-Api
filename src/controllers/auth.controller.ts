@@ -1,3 +1,4 @@
+import { ACCOUNT_TEMPLATE } from './../templates/index';
 import fs from 'fs/promises'
 import { sendMail } from '../utils/mailer';
 import { generateRandNumber, generateAccountNumber } from './../utils/functions';
@@ -40,7 +41,7 @@ export const handleSignUp = async (req: Request, res: Response) => {
   })
 
   // Send Email
-  let message = await fs.readFile(path.resolve("./src/templates/new_account.html"), "utf-8") 
+  let message = ACCOUNT_TEMPLATE
   message = message.replace("{{ firstname }}", user.name)
   message = message.replace("{{ bankName }}", process.env.APP_NAME!)
   message = message.replace("{{ accountNumber }}", account.accountNumber)

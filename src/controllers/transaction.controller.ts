@@ -7,6 +7,7 @@ import { Request } from 'express';
 import transactionModel from '../models/transaction.model';
 import path from 'path';
 import userModel from '../models/user.model';
+import { TRANSACTION_TEMPLATE } from '../templates';
 
 
 export const handleGetAllTransactions = async (req: Request, res: Response) => {
@@ -42,7 +43,7 @@ export const handleApproveTransaction = async (req: Request, res: Response) => {
     <p class="message">Your request to ${transaction.type} $${transaction.amount.toLocaleString()} has been approved and completed</p>
   `
 
-  let message = await fs.readFile(path.resolve("./src/templates/transaction.html"), "utf-8")
+  let message = TRANSACTION_TEMPLATE
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 
