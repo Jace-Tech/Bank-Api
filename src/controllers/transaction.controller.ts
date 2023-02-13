@@ -1,11 +1,9 @@
 import { sendMail } from './../utils/mailer';
-import fs from 'fs/promises';
 import { BadRequestError, NotFoundError, UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
 import { Response } from 'express';
 import { Request } from 'express';
 import transactionModel from '../models/transaction.model';
-import path from 'path';
 import userModel from '../models/user.model';
 import { TRANSACTION_TEMPLATE } from '../templates';
 
