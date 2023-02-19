@@ -1,4 +1,4 @@
-import { deleteAllowed, handleCreateAllowed, updateAllowed } from './../controllers/allowed.controller';
+import { deleteAllowed, handleCreateAllowed, updateAllowed, handleGetUsersAllowed } from './../controllers/allowed.controller';
 import { authMiddleware } from './../middlewares/auth.middleware';
 import { Router } from "express"
 import config from "./../configs/index"
@@ -9,8 +9,9 @@ const router = Router()
 
 // Register Route
 router.post("/user/:userId/create", authMiddleware(roles.ADMIN), handleCreateAllowed)
-router.post("/:allowId/delete", authMiddleware(roles.ADMIN), deleteAllowed)
+router.delete("/:allowId/delete", authMiddleware(roles.ADMIN), deleteAllowed)
 router.post("/:allowId/update", authMiddleware(roles.ADMIN), updateAllowed)
+router.get("/user/:id", authMiddleware(roles.ADMIN), handleGetUsersAllowed)
 
 
 

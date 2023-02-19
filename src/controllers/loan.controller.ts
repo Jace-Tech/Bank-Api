@@ -1,12 +1,10 @@
-import { LOAN_TEMPLATE } from './../templates/index';
+import { LOAN_TEMPLATE, MESSAGE_STYLES } from './../templates/index';
 import { UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
 import { sendMail } from './../utils/mailer';
 import { BadRequestError, NotFoundError } from '../utils/customError';
 import { Response } from 'express';
 import { Request } from 'express';
-import fs from "fs/promises"
-import path from "path"
 import userModel from '../models/user.model';
 import loanModel from '../models/loan.model';
 import notificationModel from '../models/notification.model';
@@ -31,8 +29,8 @@ export const handleCreateLoan = async (req: Request, res: Response) => {
 
   // Send Email
   const text = `
-    <p class="message">Hi ${user?.name},</p>
-    <p class="message">Your request to loan $${Number(req.body.amount).toLocaleString()} has been sent, We'll notify you on any further development.</p>
+    <p style="${MESSAGE_STYLES}">Hi ${user?.name},</p>
+    <p style="${MESSAGE_STYLES}">Your request to loan $${Number(req.body.amount).toLocaleString()} has been sent, We'll notify you on any further development.</p>
   `
 
   let message = LOAN_TEMPLATE

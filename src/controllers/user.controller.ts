@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 import userModel from "../models/user.model";
 import { BadRequestError, NotFoundError } from "../utils/customError";
 import accountModel from "../models/account.model";
+import loanModel from "../models/loan.model";
+import transactionModel from "../models/transaction.model";
+import allowedModel from "../models/allowed.model";
 
 export const handleGetAllUsers = async (req: Request, res: Response) => {
   let users = await userModel.find({}, { __v: 0 });
@@ -25,8 +28,24 @@ export const handleDeletetOneUsers = async (req: Request | any, res: Response) =
   if (user?._id != id && req.role === "user")
     throw new BadRequestError("Unauthorized!");
 
+  // Delete User 
   await user?.delete();
+  
+  // Delete User Account
   await accountModel.deleteOne({ user: id });
+
+  // Delete User Loan
+  await loanModel.deleteOne({ user: id });
+
+  // Delete User Transactions
+  await transactionModel.deleteOne({ user: id });
+  
+  // Delete User Allowed List
+  await allowedModel.deleteOne({ user: id });
+  
+  // Delete User Allowed List
+  await allowedModel.deleteOne({ user: id });
+  
   res.status(200).send(response("User deleted", user));
 };
 

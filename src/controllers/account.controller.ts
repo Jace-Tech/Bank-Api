@@ -1,3 +1,4 @@
+import { MESSAGE_STYLES } from './../templates/index';
 import { sendMail } from './../utils/mailer';
 import { response } from './../utils/response';
 import { generateRandNumber, generateDate } from './../utils/functions';
@@ -59,8 +60,8 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
 
   // Send Email
   const text = `
-    <p class="message">Hi ${req?.user?.name},</p>
-    <p class="message">Request to ${transaction.type} $${transaction.amount.toLocaleString()} has been sent, It'll be processed as soon as possible. You be updated on any development.</p>
+    <p style="${MESSAGE_STYLES}">Hi ${req?.user?.name},</p>
+    <p style="${MESSAGE_STYLES}">Request to ${transaction.type} $${transaction.amount.toLocaleString()} has been sent, It'll be processed as soon as possible. You be updated on any development.</p>
   `
 
   let message = TRANSACTION_TEMPLATE
@@ -105,19 +106,23 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
   account.balance = balance
   await account.save()
 
+  // Get Admin Account
+  const adminAccount = await accountModel.findOne({ user: req.user._id })!
+
   // Create transaction
   await transactionModel.create({
     amount: req.body.amount,
-    sender: account?._id,
+    sender: adminAccount?._id,
     type: "deposit",
     status: "approved",
+    isCredit: true,
     receiver: account?.accountNumber
   })
 
   // Send Email
   const text = `
-    <p class="message">Hi ${account?.user?.name},</p>
-    <p class="message">Your account was credited with $${Number(req.body?.amount).toLocaleString()}.</p>
+    <p style="${MESSAGE_STYLES}">Hi ${account?.user?.name},</p>
+    <p style="${MESSAGE_STYLES}">Your account was credited with $${Number(req.body?.amount).toLocaleString()}.</p>
   `
 
   let message = TRANSACTION_TEMPLATE
@@ -131,6 +136,6 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
 }
 
 export const handleGetAllAccounts = async (req: Request | any, res: Response) => {
-  const accounts = await accountModel.find({}).populate("user")
+  const accounts = await accountModel.find({ isAdmin: false }).populate("user")
   res.status(200).send(response("Users Accounct", accounts))
 }

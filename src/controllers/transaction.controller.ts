@@ -1,3 +1,4 @@
+import { MESSAGE_STYLES } from './../templates/index';
 import { sendMail } from './../utils/mailer';
 import { BadRequestError, NotFoundError, UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
@@ -37,8 +38,8 @@ export const handleApproveTransaction = async (req: Request, res: Response) => {
 
   // Send Email
   const text = `
-    <p class="message">Hi ${transaction.sender?.name},</p>
-    <p class="message">Your request to ${transaction.type} $${transaction.amount.toLocaleString()} has been approved and completed</p>
+    <p style="${MESSAGE_STYLES}">Hi ${transaction.sender?.name},</p>
+    <p style="${MESSAGE_STYLES}">Your request to ${transaction.type} $${transaction.amount.toLocaleString()} has been approved and completed</p>
   `
 
   let message = TRANSACTION_TEMPLATE
@@ -55,12 +56,21 @@ export const handleBackdate = async (req: Request, res: Response) => {
   if(!req.params.transactId) throw new BadRequestError("Transaction ID is required")
   if(!req.body.date) throw new BadRequestError("Date is required")
 
-  const transaction = await transactionModel.findById(req.params.transactId)
+  const transaction = await transactionModel.findByIdAndUpdate(req.params.transactId, {
+    $set: {
+      date: Date.parse(req.body.date) as any
+    }
+  }, { new: true })
   if(!transaction) throw new NotFoundError("Transaction not found")
 
-  transaction.createdAt = new Date(req.body.date)
-  await transaction.save()
 
   res.status(200).send(response("Transaction Updated", transaction))
 }
 
+
+export const handleDeleteTransaction = async (req: Request | any, res: Response) => {
+  if(!req.params.id) throw new BadRequestError("Transaction id is required")
+
+  const transaction = await transactionModel.findByIdAndDelete(req.params.id)
+  res.status(200).send(response("Transaction deleted", transaction))
+}

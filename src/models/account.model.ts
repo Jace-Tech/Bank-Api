@@ -20,6 +20,10 @@ const AccountSchema = new mongoose.Schema(
       type: Number,
       default: 0.0,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false
+    },
     routingNumber: {
       type: Number,
     },

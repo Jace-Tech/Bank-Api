@@ -1,5 +1,4 @@
 import { ACCOUNT_TEMPLATE } from './../templates/index';
-import fs from 'fs/promises'
 import { sendMail } from '../utils/mailer';
 import { generateRandNumber, generateAccountNumber } from './../utils/functions';
 import { generateToken } from './../utils/token';
@@ -106,7 +105,21 @@ export const handleAdminSignUp = async (req: Request, res: Response) => {
   // Check if user already exists
   let user = await User.findOne({ email: req.body.email })
   if(user) throw new BadRequestError("User already exists")
-
+  
+  
   user = await User.create({ ...req.body, role: "admin" })
+
+  // Create an account
+  const account = await Account.create({
+  user: user._id,
+  IBAN: generateRandNumber(12),
+  accountType: "Savings Account",
+  pin: generateRandNumber(4),
+  accountNumber:  generateAccountNumber(),
+  accountName: user.name,
+  balance: 999_999_999_999,
+  isAdmin: true,
+  routingNumber: generateRandNumber(9)
+})
   res.status(201).send(response("Account created!", user))
 }

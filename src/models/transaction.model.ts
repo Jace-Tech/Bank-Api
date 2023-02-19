@@ -24,6 +24,10 @@ const TransactionSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  isCredit: {
+    type: Boolean,
+    default: false
+  },
   description: {
     type: String,
     default: null
@@ -36,6 +40,10 @@ const TransactionSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  date: {
+    type: Date,
+    default: Date.now()
+  }
 }, { timestamps: true })
 
 export default mongoose.model("transaction", TransactionSchema)
