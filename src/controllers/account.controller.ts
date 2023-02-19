@@ -56,7 +56,7 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
   await account.save()
 
   // Create Transaction
-  const transaction = await transactionModel.create({...req.body })
+  const transaction = await transactionModel.create({...req.body})
 
   // Send Email
   const text = `
@@ -111,6 +111,7 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
 
   // Create transaction
   await transactionModel.create({
+
     amount: req.body.amount,
     sender: adminAccount?._id,
     type: "deposit",

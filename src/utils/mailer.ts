@@ -17,6 +17,7 @@ const { mail } = configs
 
 export const sendMail = async (to: string[] | string, subject: string, message: string, from?: string) => {
   from = from || `Found <no-reply${process.env.APP_DOMAIN}>`
+  if(!to) return
   
   // create reus able transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({

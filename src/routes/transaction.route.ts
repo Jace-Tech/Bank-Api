@@ -1,4 +1,4 @@
-import { handleGetUsersTransaction } from './../controllers/transaction.controller';
+import { handleGetUsersTransaction, handleCancelTransaction } from './../controllers/transaction.controller';
 import { authMiddleware } from './../middlewares/auth.middleware';
 import { Router } from "express"
 import { handleGetAllTransactions, handleApproveTransaction, handleBackdate, handleDeleteTransaction } from "../controllers/transaction.controller"
@@ -15,6 +15,9 @@ router.get("/user/:userId", authMiddleware(roles.USERS), handleGetUsersTransacti
 
 // Approve transaction
 router.get("/:transactId/approve", authMiddleware(roles.ADMIN), handleApproveTransaction)
+
+// Cancel transaction
+router.get("/:transactId/cancel", authMiddleware(roles.ADMIN), handleCancelTransaction)
 
 // Delete transaction
 router.delete("/:id", authMiddleware(roles.ADMIN), handleDeleteTransaction)

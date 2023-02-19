@@ -10,7 +10,7 @@ import { TRANSACTION_TEMPLATE } from '../templates';
 
 
 export const handleGetAllTransactions = async (req: Request, res: Response) => {
-  const transactions = await transactionModel.find({}, { __v: 0 }).populate(["sender"]).sort({ createdAt: 'desc' }).exec()
+  const transactions = await transactionModel.find({}, { __v: 0 }).populate("sender").sort({ createdAt: 'desc' }).exec()
   res.status(200).send(response("All transactions", transactions, true))
 }
 
@@ -36,6 +36,11 @@ export const handleApproveTransaction = async (req: Request, res: Response) => {
   transaction.status = "approved"
   await transaction.save()
 
+  // Get users
+  const user = await userModel.findById(transaction?.sender?._id)
+  if(!user) throw new NotFoundError("User not found");
+
+
   // Send Email
   const text = `
     <p style="${MESSAGE_STYLES}">Hi ${transaction.sender?.name},</p>
@@ -46,9 +51,39 @@ export const handleApproveTransaction = async (req: Request, res: Response) => {
   message = message.replace("{{ message }}", text)
   message = message.replace("{{ year }}", new Date().getFullYear().toString())
 
-  await sendMail(transaction?.sender?.email!, "Transaction Notification", message)
+  await sendMail(user.email, "Transaction Notification", message)
 
   res.status(200).send(response("Transaction Approved", transaction))
+}
+
+export const handleCancelTransaction = async (req: Request, res: Response) => {
+  if(!req.params.transactId) throw new BadRequestError("Transaction ID is required")
+
+  const transaction = await transactionModel.findById(req.params.transactId).populate(["sender"]) as any
+  if(!transaction) throw new NotFoundError("Transaction not found")
+
+  // Get users
+  const user = await userModel.findById(transaction?.sender?.user)
+  if(!user) throw new NotFoundError("User not found");
+
+  // Update transaction status
+  transaction.status = "declined"
+  await transaction.save()
+
+
+  // Send Email
+  const text = `
+    <p style="${MESSAGE_STYLES}">Hi ${transaction.sender?.name},</p>
+    <p style="${MESSAGE_STYLES}">Your request to ${transaction.type} $${transaction.amount.toLocaleString()} has been declined, please contact the customer service for further details. </p>
+  `
+
+  let message = TRANSACTION_TEMPLATE
+  message = message.replace("{{ message }}", text)
+  message = message.replace("{{ year }}", new Date().getFullYear().toString())
+
+  await sendMail(user.email, "Transaction Notification", message)
+
+  res.status(200).send(response("Transaction declined", transaction))
 }
 
 
