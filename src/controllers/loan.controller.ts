@@ -56,7 +56,7 @@ export const handleCreateLoan = async (req: Request, res: Response) => {
 export const handleApproveLoan = async (req: Request, res: Response) => {	 
   if(!req.params.id) throw new BadRequestError("Loan Id is required")
   if(!req.body.date) throw new BadRequestError("Date is required")
-  if(!req.params.interest) throw new BadRequestError("Interest is required")
+  if(!req.body.interest) throw new BadRequestError("Interest is required")
 
   // Check Loan
   const loan = await loanModel.findById(req.params.id)
@@ -71,12 +71,12 @@ export const handleApproveLoan = async (req: Request, res: Response) => {
   loan.interest = req.body.interest
   loan.endDate = Date.parse(req.body.date) as any
   loan.status = "active"
-  await loan.update()
+  await loan.save()
 
   // Send Email
   const text = `
     <p style="${MESSAGE_STYLES}">Hi ${user?.name},</p>
-    <p style="${MESSAGE_STYLES}">Your request for the loan of $${Number(loan.amount).toLocaleString()} has been approved, You'll be paying back the total sum of ${req.body.interest} by ${new Date(req.body.date).toString()}</p>
+    <p style="${MESSAGE_STYLES}">Your request for the loan of $${Number(loan.amount).toLocaleString()} has been approved, You'll be paying back the total sum of $${req.body.interest} by (${new Date(req.body.date).toString()})</p>
   `
 
   let message = LOAN_TEMPLATE
@@ -94,7 +94,7 @@ export const handleApproveLoan = async (req: Request, res: Response) => {
 // - Admin will add date
 
 export const handleUsersLoan = async (req: Request, res: Response) => {	 
-  if(!req.params.userID) throw new BadRequestError("User ID is required")
+  if(!req.params.userId) throw new BadRequestError("User ID is required")
 
   const user = await userModel.findById(req.body.user)
   if(!user) throw new NotFoundError("User not found")
