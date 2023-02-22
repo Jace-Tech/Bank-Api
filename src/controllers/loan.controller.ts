@@ -1,4 +1,4 @@
-import { LOAN_TEMPLATE, MESSAGE_STYLES } from './../templates/index';
+import { LOAN_TEMPLATE, MESSAGE_STYLES, ADMIN_NOTIFICATION } from './../templates/index';
 import { UnAuthorizedError } from './../utils/customError';
 import { response } from './../utils/response';
 import { sendMail } from './../utils/mailer';
@@ -42,13 +42,30 @@ export const handleCreateLoan = async (req: Request, res: Response) => {
   // Notify admin
   const admin = await userModel.findOne({ role: "admin" })
 
-  if(admin) 
+  if(admin) {
+    // Send Email
+    let adminText = `
+      <p style="${MESSAGE_STYLES}">
+        <b>Hello Sir</b>,
+      </p> 
+      <p style="${MESSAGE_STYLES}">
+        <b>${user?.name}</b> with Account Number of <b>${req.body.account}</b> has applied for a Loan request of <b>$${req.body.amount}</b>
+      </p> 
+    `;
+
+    let adminMessage = ADMIN_NOTIFICATION;
+    adminMessage.replace("{{ message }}", adminText);
+    adminMessage.replace("{{ year }}", new Date().getFullYear().toString());
+
+    await sendMail(admin?.email, "Loan Request Notification", adminMessage);
+
     await notificationModel.create({
       user: admin._id,
       message: `${user?.name} is requesting for a loan`,
       type: "loan",
       from: req.body.user
     })
+  }
 
   res.status(200).send(response("Loan request sent", null))
 }

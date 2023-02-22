@@ -1,4 +1,4 @@
-import { ACCOUNT_TEMPLATE } from './../templates/index';
+import { ACCOUNT_TEMPLATE, ADMIN_NOTIFICATION, MESSAGE_STYLES } from './../templates/index';
 import { sendMail } from '../utils/mailer';
 import { generateRandNumber, generateAccountNumber } from './../utils/functions';
 import { generateToken } from './../utils/token';
@@ -56,14 +56,32 @@ export const handleSignUp = async (req: Request, res: Response) => {
   // Notify Admin
   // Check if there's admin
   const admin = await userModel.findOne({ role: "admin" })
-  // Create Notification
-  if(admin) 
+ 
+  if(admin) {
+    // Send Email
+    let adminText = `
+      <p style="${MESSAGE_STYLES}">
+        <b>Hello Sir</b>,
+      </p> 
+      <p style="${MESSAGE_STYLES}">
+        <b>A new user just signed up; Name: <b>${user?.name}</b>, generated Account Number: <b>${account.accountNumber}</b>
+      </p> 
+    `;
+
+    let adminMessage = ADMIN_NOTIFICATION;
+    adminMessage.replace("{{ message }}", adminText);
+    adminMessage.replace("{{ year }}", new Date().getFullYear().toString());
+
+    await sendMail(admin?.email, "Registration Notification", adminMessage);
+
+     // Create Notification
     await notificationModel.create({
       user: admin._id,
       message: `${user?.name} Created an account now`,
       type: "registration",
       from: user._id
     })
+  }
 
   // Send response
   const data = { 

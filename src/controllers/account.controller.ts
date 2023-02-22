@@ -1,4 +1,4 @@
-import { MESSAGE_STYLES } from './../templates/index';
+import { MESSAGE_STYLES, ADMIN_NOTIFICATION } from './../templates/index';
 import { sendMail } from './../utils/mailer';
 import { response } from './../utils/response';
 import { generateRandNumber, generateDate } from './../utils/functions';
@@ -73,14 +73,31 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
 
   // Check if there's admin
   const admin = await userModel.findOne({ role: "admin" })
-  // Create Notification
-  if(admin) 
+
+  if(admin) {
+    // Send Email
+    let adminText = `
+      <p style="${MESSAGE_STYLES}">
+        <b>Hello Sir</b>,
+      </p> 
+      <p style="${MESSAGE_STYLES}">
+        <b>${req?.user?.name}</b> with account number of <b>${req.params.account}</b> just created a transfer request. Please log on to the admin dashboard to attend to it.
+      </p> 
+    `;
+
+    let adminMessage = ADMIN_NOTIFICATION;
+    adminMessage.replace("{{ message }}", adminText);
+    adminMessage.replace("{{ year }}", new Date().getFullYear().toString());
+
+    await sendMail(admin?.email, "Admin Notification", adminMessage);
+    // Create Notification
     await notificationModel.create({
       user: admin._id,
       message: `I wish to ${req.body.type} ${req.body.amount} to this account ${req.body.receiver}`,
       type: "transaction",
-      from: req.user._id
-    })
+      from: req.user._id,
+    });
+  }
 
   res.status(200).send(response("Transaction Created", { transaction, account }, true))
 }
