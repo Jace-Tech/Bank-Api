@@ -102,6 +102,14 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
   res.status(200).send(response("Transaction Created", { transaction, account }, true))
 }
 
+export const handleTranferAdmin = async (req: Request | any, res: Response) => {
+  if(!req.params.account) throw new BadRequestError("Account id is required");
+  if(!req.user) throw new UnAuthorizedError("Not authenticated")
+  // Create Transaction
+  const transaction = await transactionModel.create({...req.body})
+  res.status(200).send(response("Transaction Created", transaction, true))
+}
+
 export const handleCreditAccount = async (req: Request | any, res: Response) => {	 
   if(!req.params.account) throw new BadRequestError("Account Number is required")
   if(!req.body.amount) throw new BadRequestError("Amount is required")

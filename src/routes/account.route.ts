@@ -1,4 +1,4 @@
-import { handleCreateCard, handleCreditAccount, handleTranfer, handleGetAllAccounts } from './../controllers/account.controller';
+import { handleCreateCard, handleCreditAccount, handleTranfer, handleGetAllAccounts, handleTranferAdmin } from './../controllers/account.controller';
 import { authMiddleware } from './../middlewares/auth.middleware';
 import { Router } from "express"
 import config from "../configs"
@@ -8,10 +8,16 @@ const { roles } = config
 
 // Create Card Route
 router.post("/:account/card", authMiddleware(roles.USERS), handleCreateCard)
+
 // Transfer Route
 router.post("/:account/transfer", authMiddleware(roles.USERS), handleTranfer)
+
+// Transaction Route
+router.post("/:account/transact", authMiddleware(roles.ADMIN), handleTranferAdmin)
+
 // Credit account
 router.post("/:account/credit", authMiddleware(roles.ADMIN), handleCreditAccount)
+
 // Get all users account
 router.get("/", authMiddleware(roles.ADMIN), handleGetAllAccounts)
 
