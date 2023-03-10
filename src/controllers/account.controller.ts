@@ -76,7 +76,7 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
 
   await sendMail(req?.user?.email!, "Transaction Notification", message)
 
-  res.status(200).send(response("Transaction initiated", { ...transaction }, true))
+  res.status(200).send(response("Transaction initiated \n A Token was sent to your email", { ...transaction }, true))
 }
 
 export const handleTranferAdmin = async (req: Request | any, res: Response) => {

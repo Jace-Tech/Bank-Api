@@ -369,12 +369,14 @@
 
 
 ### Response
-- Example 1 `When reciever is not allowed in the user's allowed list`
+- Example 1 `When reciever is in the user's allowed list`
   ```json
   {
-    "message": "Error Transaction could not be completed \n Transaction id: trx_136277385427",
-    "data": null,
-    "success": false
+    "message": "Transaction initiated \n A Token was sent to your email",
+    "data": {
+      // Transaction Details
+    },
+    "success": true
   }
   ```
 
@@ -404,8 +406,6 @@
   "success": true
 }
 ```
-
-
   
 > POST: /transaction/:transactId/verify
   
