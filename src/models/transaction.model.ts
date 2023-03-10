@@ -36,6 +36,10 @@ const TransactionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  verified: {
+    type: Boolean,
+    default: false
+  },
   beneficiaryName: {
     type: String,
     default: null

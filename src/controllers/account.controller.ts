@@ -1,4 +1,4 @@
-import { MESSAGE_STYLES, ADMIN_NOTIFICATION } from './../templates/index';
+import { MESSAGE_STYLES } from './../templates/index';
 import { sendMail } from './../utils/mailer';
 import { response } from './../utils/response';
 import { generateRandNumber, generateDate } from './../utils/functions';
@@ -8,9 +8,9 @@ import cardModel from '../models/card.model';
 import allowedModel from '../models/allowed.model';
 import accountModel from '../models/account.model';
 import transactionModel from '../models/transaction.model';
-import notificationModel from '../models/notification.model';
 import userModel from '../models/user.model';
 import { TRANSACTION_TEMPLATE } from '../templates';
+import tokenModel from '../models/token.model';
 
 
 export const handleCreateCard = async (req: Request | any, res: Response) => {
@@ -50,18 +50,24 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
   if(!account) throw new BadRequestError("Account not found")
   if(account?.balance < req.body.amount) throw new BadRequestError("Insufficient Funds")
 
-  // Update Account
-  const newBalance = account.balance - req.body.amount
-  account.balance = newBalance
-  await account.save()
 
   // Create Transaction
   const transaction = await transactionModel.create({...req.body})
 
+  const tokenPin = generateRandNumber(6)
+
+  // Generate Token
+  const token = await tokenModel.create({
+    transaction: transaction._id,
+    user: req.user._id,
+    token: tokenPin
+  })
+
   // Send Email
   const text = `
     <p style="${MESSAGE_STYLES}">Hi ${req?.user?.name},</p>
-    <p style="${MESSAGE_STYLES}">Request to ${transaction.type} $${transaction.amount.toLocaleString()} has been sent, It'll be processed as soon as possible. You be updated on any development.</p>
+    <p style="${MESSAGE_STYLES}">Transaction initiated, use this token to complete the transaction.</p>
+    <p style="${MESSAGE_STYLES} font-size: 2.5rem; font-weight: bold; color: #333;">${token.token}</p>
   `
 
   let message = TRANSACTION_TEMPLATE
@@ -70,43 +76,15 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
 
   await sendMail(req?.user?.email!, "Transaction Notification", message)
 
-
-  // Check if there's admin
-  const admin = await userModel.findOne({ role: "admin" })
-
-  if(admin) {
-    // Send Email
-    let adminText = `
-      <p style="${MESSAGE_STYLES}">
-        <b>Hello Sir</b>,
-      </p> 
-      <p style="${MESSAGE_STYLES}">
-        <b>${req?.user?.name}</b> with account number of <b>${req.params.account}</b> just created a transfer request. Please log on to the admin dashboard to attend to it.
-      </p> 
-    `;
-
-    let adminMessage = ADMIN_NOTIFICATION;
-    adminMessage.replace("{{ message }}", adminText);
-    adminMessage.replace("{{ year }}", new Date().getFullYear().toString());
-
-    await sendMail(admin?.email, "Admin Notification", adminMessage);
-    // Create Notification
-    await notificationModel.create({
-      user: admin._id,
-      message: `I wish to ${req.body.type} ${req.body.amount} to this account ${req.body.receiver}`,
-      type: "transaction",
-      from: req.user._id,
-    });
-  }
-
-  res.status(200).send(response("Transaction Created", { transaction, account }, true))
+  res.status(200).send(response("Transaction initiated", { ...transaction }, true))
 }
 
 export const handleTranferAdmin = async (req: Request | any, res: Response) => {
   if(!req.params.account) throw new BadRequestError("Account id is required");
   if(!req.user) throw new UnAuthorizedError("Not authenticated")
+
   // Create Transaction
-  const transaction = await transactionModel.create({...req.body})
+  const transaction = await transactionModel.create({...req.body, verified: true})
   res.status(200).send(response("Transaction Created", transaction, true))
 }
 
@@ -142,7 +120,8 @@ export const handleCreditAccount = async (req: Request | any, res: Response) => 
     type: "deposit",
     status: "approved",
     isCredit: true,
-    receiver: account?.accountNumber
+    receiver: account?.accountNumber,
+    verified: true
   })
 
   // Send Email

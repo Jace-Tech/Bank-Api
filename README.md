@@ -405,3 +405,25 @@
 }
 ```
 
+
+  
+> POST: /transaction/:transactId/verify
+  
+### Required Params
+- transactId: transaction ID
+  
+### Required Body
+- token: OTP [token]
+
+### Response
+
+```json
+{
+  "message": "Transaction completed",
+  "data": {
+    // ...transaction Details,
+    // ...account Details
+  },
+  "success": true
+}
+```
