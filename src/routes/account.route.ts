@@ -7,10 +7,10 @@ const router = Router()
 const { roles } = config
 
 // Create Card Route
-router.post("/:account/card", authMiddleware(roles.USERS), handleCreateCard)
+router.post("/:account/card", authMiddleware(roles.USERS), handleCreateCard as any)
 
 // Transfer Route
-router.post("/:account/transfer", authMiddleware(roles.USERS), handleTranfer)
+router.post("/:account/transfer", authMiddleware(roles.USERS), handleTranfer as any)
 
 // Transaction Route
 router.post("/:account/transact", authMiddleware(roles.ADMIN), handleTranferAdmin)

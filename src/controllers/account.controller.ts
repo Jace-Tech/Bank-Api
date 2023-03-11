@@ -11,9 +11,10 @@ import transactionModel from '../models/transaction.model';
 import userModel from '../models/user.model';
 import { TRANSACTION_TEMPLATE } from '../templates';
 import tokenModel from '../models/token.model';
+import { RequestAlt } from '../@types';
 
 
-export const handleCreateCard = async (req: Request | any, res: Response) => {
+export const handleCreateCard = async (req: Request & RequestAlt, res: Response) => {
   if(!req.params.account) throw new BadRequestError("Account id is required");
   if(!req.user) throw new BadRequestError("Not authenticated")
 
@@ -28,7 +29,7 @@ export const handleCreateCard = async (req: Request | any, res: Response) => {
   res.status(200).send(response("Card created!", card, true))
 }
 
-export const handleTranfer = async (req: Request | any, res: Response) => {
+export const handleTranfer = async (req: Request & RequestAlt, res: Response) => {
   if(!req.params.account) throw new BadRequestError("Account id is required");
   if(!req.user) throw new UnAuthorizedError("Not authenticated")
 
@@ -46,7 +47,7 @@ export const handleTranfer = async (req: Request | any, res: Response) => {
   if(!allowed) throw new UnAuthorizedError(`Error Transaction could not be completed \nTransaction id: ${randomId}`)
 
   // Check balance
-  const account = await accountModel.findOne({ accountNumber: req.params.account })
+  const account = await accountModel.findOne({ user: req.user._id })
   if(!account) throw new BadRequestError("Account not found")
   if(account?.balance < req.body.amount) throw new BadRequestError("Insufficient Funds")
 
