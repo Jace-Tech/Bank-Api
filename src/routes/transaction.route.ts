@@ -14,7 +14,7 @@ router.get("/", authMiddleware(roles.ADMIN), handleGetAllTransactions)
 router.get("/user/:userId", authMiddleware(roles.USERS), handleGetUsersTransaction)
 
 // Verify transaction
-router.post("/:transactId/verify", authMiddleware(roles.USERS), handleTransactionVerification as any)
+router.post("/:id/verify", authMiddleware(roles.USERS), handleTransactionVerification as any)
 
 // Approve transaction
 router.get("/:transactId/approve", authMiddleware(roles.ADMIN), handleApproveTransaction)
