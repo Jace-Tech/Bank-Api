@@ -45,6 +45,7 @@ export const handleTransactionVerification = async (req: Request & RequestAlt, r
   const transaction = await transactionModel.findOne({ _id: req.params.id })
   if(!transaction) throw new NotFoundError("No transaction found")
   transaction.verified = true
+  transaction.status = "approved"
   await transaction.save()
 
   // Get account info
